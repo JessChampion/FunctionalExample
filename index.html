@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link data-require="jasmine@*" data-semver="2.4.1" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.4.1/jasmine.css" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    html {
+      padding: 0 1rem;
+    }
+    
+    body {
+      margin: 0 -1rem;
+      font-family: helvetica;
+    }
+    
+    .section.output {
+      display: flex;
+    }
+    
+    #tests {
+      margin-bottom: -1rem;
+    }
+    
+    .group {
+      display: inline-block;
+      width: 34%;
+      border-right: 1px solid #ddd;
+      background: white;
+    }
+    
+    .group:last-of-type {
+      border-right: none;
+    }
+    
+    .section-heading {
+      background: #ddd;
+      padding: 0.5rem 0.25rem;
+      border-top: 2px ridge #ddd;
+      border-bottom: 2px ridge #ddd;
+    }
+    
+    .section-body {
+      padding: 0.5rem 0.25rem;
+      margin: 0;
+    }
+    
+    .jasmine_html-reporter {
+      max-width: calc(100% - 1.5rem);
+      overflow: hidden;
+      padding: 0 1rem;
+    }
+    
+    .jasmine-banner {
+      padding: 0 0 0.25rem !important;
+    }
+    
+    .jasmine-results {
+      overflow: hidden;
+      margin: 0 !important;
+    }
+    
+    .jasmine-description {
+      padding: 0.25rem;
+    }
+    
+    .jasmine-result-message {
+      overflow: scroll;
+      padding-top: 0.25rem !important;
+    }
+  </style>
+</head>
+
+<body onload="updateView(main())">
+  <div class="main">
+    <div class="section output clearfix">
+      <div class="group">
+        <div class="section-heading">Inital Items</div>
+        <pre class="section-body" id="inital"></pre>
+      </div>
+      <div class="group">
+        <div class="section-heading"> + Added Item</div>
+        <pre class="section-body" id="added"></pre>
+      </div>
+      <div class="group">
+        <div class="section-heading"> = Output</div>
+        <pre class="section-body" id="output"></pre>
+      </div>
+    </div>
+    <div class="section tests clearfix">
+      <div class="section-heading">Tests</div>
+      <div class="section-body" id="tests"></div>
+    </div>
+  </div>
+  <script data-require="jasmine@*" data-semver="2.4.1" src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.4.1/jasmine.js"></script>
+  <script data-require="jasmine@*" data-semver="2.4.1" src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.4.1/jasmine-html.js"></script>
+  <script data-require="jasmine@*" data-semver="2.4.1" src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.4.1/boot.js"></script>
+  <script data-require="Ramda@*" data-semver="0.23.0" src="//cdn.jsdelivr.net/ramda/latest/ramda.min.js"></script>
+  <script src="cart.js"></script>
+  <script src="tests.spec.js"></script>
+  <script type="text/javascript">
+    function main() {
+      return runDemo();
+    }
+
+    function updateView(output) {
+      console.log(output);
+      document.getElementById('inital').innerHTML = output.initialCart;
+      document.getElementById('added').innerHTML = JSON.stringify(output.demoItem, null, 2);
+      document.getElementById('output').innerHTML = JSON.stringify(output.cart, null, 2);
+    }
+  </script>
+</body>
+
+</html>
