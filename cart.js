@@ -1,20 +1,16 @@
+const getTotal = (items) => {
+  let total = 0;
+  for (let index in items) {
+    let item = items[index];
+    total += item.price * item.quantity;
+  }
+  return total;
+};
+
 class Cart {
   constructor(items = []) {
     this.items = items;
-    this.total = 0;
-    this.getTotal(items);
-  }
-
-  // Get Total
-  // calculate total of items in the cart
-  // ----------------------------------------------
-  getTotal(items) {
-    let total = 0;
-    for (let index in items) {
-      let item = this.items[index];
-      total += item.price * item.quantity;
-    }
-    return total;
+    this.total = getTotal(items);
   }
 
   // Add Item
@@ -25,13 +21,13 @@ class Cart {
       let item = this.items[index];
       if (item.id === newItem.id) {
         item.quantity += newItem.quantity;
-        this.total = this.getTotal(this.items);
+        this.total = getTotal(this.items);
         return;
       }
     }
 
     this.items.push(newItem);
-    this.total = this.getTotal(this.items);
+    this.total = getTotal(this.items);
   }
 
   // To JSON
