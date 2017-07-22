@@ -30,7 +30,7 @@ describe("A shopping cart", () => {
       expect(result.items[0]).toEqual(testItem);
       expect(result.total).toBe(5);
     });
-   
+
     it("can add an item of a new type to the cart", () => {
       const testItem = {
         id: 3,
@@ -44,7 +44,7 @@ describe("A shopping cart", () => {
       expect(result.items.length).toBe(3);
       expect(result.items[2]).toEqual(testItem);
     });
-    
+
     it("should correctly calculate the cart total when adding an item of a new type", () => {
       const testItem = {
         id: 3,

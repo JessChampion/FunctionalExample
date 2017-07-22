@@ -3,67 +3,88 @@
 
 <head>
   <link data-require="jasmine@*" data-semver="2.4.1" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.4.1/jasmine.css" />
-  <link rel="stylesheet" href="style.css" />
   <style>
     html {
       padding: 0 1rem;
     }
-    
+
     body {
       margin: 0 -1rem;
       font-family: helvetica;
     }
-    
+
     .section.output {
       display: flex;
     }
-    
+
+    .section.error {
+      display: none;
+    }
+
+    .section.error.open {
+      display: block;
+    }
+
+    .section.error.open + .section.output {
+      display: none;
+    }
+
+    #error {
+      max-width: 100%;
+      overflow: scroll;
+    }
+
     #tests {
       margin-bottom: -1rem;
     }
-    
+
     .group {
       display: inline-block;
       width: 34%;
       border-right: 1px solid #ddd;
       background: white;
     }
-    
+
     .group:last-of-type {
       border-right: none;
     }
-    
+
     .section-heading {
       background: #ddd;
       padding: 0.5rem 0.25rem;
       border-top: 2px ridge #ddd;
       border-bottom: 2px ridge #ddd;
     }
-    
+
+    .section-heading .close {
+      float: right;
+      margin-right: 4rem;
+    }
+
     .section-body {
       padding: 0.5rem 0.25rem;
       margin: 0;
     }
-    
+
     .jasmine_html-reporter {
       max-width: calc(100% - 1.5rem);
       overflow: hidden;
       padding: 0 1rem;
     }
-    
+
     .jasmine-banner {
       padding: 0 0 0.25rem !important;
     }
-    
+
     .jasmine-results {
       overflow: hidden;
       margin: 0 !important;
     }
-    
+
     .jasmine-description {
       padding: 0.25rem;
     }
-    
+
     .jasmine-result-message {
       overflow: scroll;
       padding-top: 0.25rem !important;
@@ -72,44 +93,101 @@
 </head>
 
 <body onload="updateView(main())">
-  <div class="main">
-    <div class="section output clearfix">
-      <div class="group">
-        <div class="section-heading">Inital Items</div>
-        <pre class="section-body" id="inital"></pre>
-      </div>
-      <div class="group">
-        <div class="section-heading"> + Added Item</div>
-        <pre class="section-body" id="added"></pre>
-      </div>
-      <div class="group">
-        <div class="section-heading"> = Output</div>
-        <pre class="section-body" id="output"></pre>
-      </div>
+<div class="main">
+  <div class="section error">
+    <div class="section-heading" onclick="dismissError()">
+      Error
+      <button class="close">DISMISS</button>
     </div>
-    <div class="section tests clearfix">
-      <div class="section-heading">Tests</div>
-      <div class="section-body" id="tests"></div>
+    <pre class="section-body" id="error"></pre>
+  </div>
+  <div class="section output">
+    <div class="group">
+      <div class="section-heading">Inital Items</div>
+      <pre class="section-body" id="inital"></pre>
+    </div>
+    <div class="group">
+      <div class="section-heading"> + Added Item</div>
+      <pre class="section-body" id="added"></pre>
+    </div>
+    <div class="group">
+      <div class="section-heading"> = Output</div>
+      <pre class="section-body" id="output"></pre>
     </div>
   </div>
-  <script data-require="jasmine@*" data-semver="2.4.1" src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.4.1/jasmine.js"></script>
-  <script data-require="jasmine@*" data-semver="2.4.1" src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.4.1/jasmine-html.js"></script>
-  <script data-require="jasmine@*" data-semver="2.4.1" src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.4.1/boot.js"></script>
-  <script data-require="Ramda@*" data-semver="0.23.0" src="//cdn.jsdelivr.net/ramda/latest/ramda.min.js"></script>
-  <script src="cart.js"></script>
-  <script src="tests.spec.js"></script>
-  <script type="text/javascript">
-    function main() {
-      return runDemo();
-    }
+  <div class="section tests clearfix">
+    <div class="section-heading">Tests</div>
+    <div class="section-body" id="tests"></div>
+  </div>
+</div>
+<script data-require="jasmine@*" data-semver="2.4.1" src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.4.1/jasmine.js"></script>
+<script data-require="jasmine@*" data-semver="2.4.1" src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.4.1/jasmine-html.js"></script>
+<script data-require="jasmine@*" data-semver="2.4.1" src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.4.1/boot.js"></script>
+<script data-require="Ramda@*" data-semver="0.23.0" src="//cdn.jsdelivr.net/ramda/latest/ramda.min.js"></script>
+<script src="cart.js"></script>
+<script src="tests.spec.js"></script>
+<script type="text/javascript">
+  // Demo Runner
+  // pay no attention to the man behind the curtain
+  // ----------------------------------------------
+  const initialItems = [{
+    id: 1,
+    price: 2,
+    quantity: 3,
+  }, {
+    id: 2,
+    price: 2.5,
+    quantity: 4,
+  }];
 
-    function updateView(output) {
-      console.log(output);
-      document.getElementById('inital').innerHTML = output.initialCart;
-      document.getElementById('added').innerHTML = JSON.stringify(output.demoItem, null, 2);
-      document.getElementById('output').innerHTML = JSON.stringify(output.cart, null, 2);
-    }
-  </script>
+  const demoItem = {
+    id: 3,
+    price: 2.5,
+    quantity: 2
+  };
+
+  const runDemo = () => {
+    let cart = new Cart(initialItems);
+    const initialCart = JSON.stringify(cart, null, 2);
+    cart.addItem(demoItem);
+
+    return {
+      initialCart,
+      demoItem,
+      cart
+    };
+  }
+
+  const displayError = (error) => {
+    console.log(error);
+    const errorSection = document.getElementById('error');
+    errorSection.innerHTML = error.stack;
+    errorSection.parentElement.classList.add('open');
+  }
+
+  const dismissError = () => {
+    const errorSection = document.getElementById('error');
+    errorSection.innerHTML = '';
+    errorSection.parentElement.classList.remove('open');
+  }
+
+  const main = () => {
+    var j = jasmine.Spec.prototype.onException;
+    jasmine.Spec.prototype.onException = (e) => {
+      console.log("HERE");
+      displayError(e);
+      return j(e);
+    };
+    return runDemo();
+  }
+
+  const updateView = (output) => {
+    console.log(output);
+    document.getElementById('inital').innerHTML = output.initialCart;
+    document.getElementById('added').innerHTML = JSON.stringify(output.demoItem, null, 2);
+    document.getElementById('output').innerHTML = JSON.stringify(output.cart, null, 2);
+  }
+</script>
 </body>
 
 </html>
