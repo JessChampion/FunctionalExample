@@ -10,6 +10,18 @@ const getTotal = (items) => {
   return totals.reduce(sum);
 };
 
+const addItem = (newItem, items) => {
+  for (let index in items) {
+    let item = items[index];
+    if (item.id === newItem.id) {
+      item.quantity += newItem.quantity;
+      return items;
+    }
+  }
+  items.push(newItem);
+  return items;
+};
+
 class Cart {
   constructor(items = []) {
     this.items = items;
@@ -32,16 +44,7 @@ class Cart {
   // add an item to the cart
   // ----------------------------------------------
   addItem(newItem) {
-    for (let index in this.items) {
-      let item = this.items[index];
-      if (item.id === newItem.id) {
-        item.quantity += newItem.quantity;
-        this.total = getTotal(this.items);
-        return;
-      }
-    }
-
-    this.items.push(newItem);
+    this.items = addItem(newItem, this.items);
     this.total = getTotal(this.items);
   }
 
