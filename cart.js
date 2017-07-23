@@ -14,20 +14,24 @@ const matchesById = (targetId) => (item) => item.id === targetId;
 
 const containsItem = (targetId, items) => items.findIndex(matchesById(targetId)) > 0;
 
-const addQuantityToExistingItem = (index, quantity, items) => {
-  items[index].quantity += quantity;
-  return items;
+const addQuantityToExistingItem = (id, extraQuantity, items) => {
+  return items.map((item) => {
+    if (item.id === id) {
+      return Object.assign({}, item, {
+        quantity: item.quantity + extraQuantity
+      });
+    }
+    return item;
+  });
 };
 
 const addNewItem = (newItem, items) => {
-  items.push(newItem);
-  return items;
+  return [...items, newItem];
 };
 
 const addItem = (newItem, items) => {
-  const index = items.findIndex(matchesById(newItem.id));
   if (containsItem(newItem.id, items)) {
-    return addQuantityToExistingItem(index, newItem.quantity, items);
+    return addQuantityToExistingItem(newItem.id, newItem.quantity, items);
   }
   return addNewItem(newItem, items);
 };
