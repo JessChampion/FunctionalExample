@@ -2,9 +2,9 @@ const getItemTotal = R.compose(R.product, R.values, R.pick(['price', 'quantity']
 
 const getTotal = R.compose(R.sum, R.map(getItemTotal));
 
-const matchesById = (targetId) => (item) => item.id === targetId;
+const matchesById = R.propEq('id');
 
-const containsItem = (targetId, items) => items.findIndex(matchesById(targetId)) > 0;
+const containsItem = (targetId) => R.any(matchesById(targetId));
 
 const addQuantityToExistingItem = (id, extraQuantity, items) => {
   return items.map((item) => {
@@ -17,15 +17,13 @@ const addQuantityToExistingItem = (id, extraQuantity, items) => {
   });
 };
 
-const addNewItem = (newItem, items) => {
-  return [...items, newItem];
-};
+const addNewItem = R.append;
 
 const addItem = (newItem, items) => {
-  if (containsItem(newItem.id, items)) {
+  if (containsItem(newItem.id)(items)) {
     return addQuantityToExistingItem(newItem.id, newItem.quantity, items);
   }
-  return addNewItem(newItem, items);
+  return addNewItem(newItem)(items)
 };
 
 class Cart {
