@@ -11,14 +11,13 @@ const getTotal = (items) => {
 };
 
 const addItem = (newItem, items) => {
-  for (let index in items) {
-    let item = items[index];
-    if (item.id === newItem.id) {
-      item.quantity += newItem.quantity;
-      return items;
-    }
+  const matchesById = (item) => item.id === newItem.id;
+  const index = items.findIndex(matchesById);
+  if (index >= 0) {
+    items[index].quantity += newItem.quantity;
+  } else {
+    items.push(newItem);
   }
-  items.push(newItem);
   return items;
 };
 
