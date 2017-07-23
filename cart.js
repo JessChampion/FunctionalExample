@@ -1,11 +1,13 @@
+const getItemTotal = (item) => item.price * item.quantity;
+
+const sum = (total, value) => total + value;
+
 const getTotal = (items) => {
   if (items.length === 0) {
     return 0;
   }
-  const totals = items.map((item) => {
-    return item.price * item.quantity;
-  });
-  return totals.reduce((total, value) => total + value);
+  const totals = items.map(getItemTotal);
+  return totals.reduce(sum);
 };
 
 class Cart {
