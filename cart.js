@@ -17,12 +17,9 @@ const addQuantityToExistingItem = (id, extraQuantity) => R.map((item) => {
 
 const addNewItem = R.append;
 
-const addItem = (newItem, items) => {
-  if (containsItem(newItem.id)(items)) {
-    return addQuantityToExistingItem(newItem.id, newItem.quantity)(items);
-  }
-  return addNewItem(newItem)(items)
-};
+const addItem = (newItem) => R.ifElse(containsItem(newItem.id),
+  addQuantityToExistingItem(newItem.id, newItem.quantity),
+  addNewItem(newItem));
 
 class Cart {
   constructor(items = []) {
@@ -46,7 +43,7 @@ class Cart {
   // add an item to the cart
   // ----------------------------------------------
   addItem(newItem) {
-    this.items = addItem(newItem, this.items);
+    this.items = addItem(newItem)(this.items);
     this.total = getTotal(this.items);
   }
 
