@@ -10,9 +10,10 @@ const getTotal = (items) => {
   return totals.reduce(sum);
 };
 
+const matchesById = (targetId) => (item) => item.id === targetId;
+
 const addItem = (newItem, items) => {
-  const matchesById = (item) => item.id === newItem.id;
-  const index = items.findIndex(matchesById);
+  const index = items.findIndex(matchesById(newItem.id));
   if (index >= 0) {
     items[index].quantity += newItem.quantity;
   } else {
