@@ -12,14 +12,24 @@ const getTotal = (items) => {
 
 const matchesById = (targetId) => (item) => item.id === targetId;
 
+const containsItem = (targetId, items) => items.findIndex(matchesById(targetId)) > 0;
+
+const addQuantityToExistingItem = (index, quantity, items) => {
+  items[index].quantity += quantity;
+  return items;
+};
+
+const addNewItem = (newItem, items) => {
+  items.push(newItem);
+  return items;
+};
+
 const addItem = (newItem, items) => {
   const index = items.findIndex(matchesById(newItem.id));
-  if (index >= 0) {
-    items[index].quantity += newItem.quantity;
-  } else {
-    items.push(newItem);
+  if (containsItem(newItem.id, items)) {
+    return addQuantityToExistingItem(index, newItem.quantity, items);
   }
-  return items;
+  return addNewItem(newItem, items);
 };
 
 class Cart {
