@@ -1,20 +1,19 @@
 class Cart {
   constructor(items = []) {
     this.items = items;
-    this.total = 0;
-    this.updateTotal();
+    this.total = this.getTotal(items);
   }
 
-  // Update Total
+  // Get Total
   // calculate total of items in the cart
   // ----------------------------------------------
-  updateTotal() {
+  getTotal(items) {
     let total = 0;
-    for (let index in this.items) {
+    for (let index in items) {
       let item = this.items[index];
       total += item.price * item.quantity;
     }
-    this.total = total;
+    return total;
   }
 
   // Add Item
@@ -25,13 +24,13 @@ class Cart {
       let item = this.items[index];
       if (item.id === newItem.id) {
         item.quantity += newItem.quantity;
-        this.updateTotal();
+        this.total = this.getTotal(this.items);
         return;
       }
     }
 
     this.items.push(newItem);
-    this.updateTotal();
+    this.total = this.getTotal(this.items);
   }
 
   // To JSON
