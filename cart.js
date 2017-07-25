@@ -1,14 +1,6 @@
-const getItemTotal = (item) => item.price * item.quantity;
+const getItemTotal = R.compose(R.product, R.values, R.pick(['price', 'quantity']));
 
-const sum = (total, value) => total + value;
-
-const getTotal = (items) => {
-  if (items.length === 0) {
-    return 0;
-  }
-  const totals = items.map(getItemTotal);
-  return totals.reduce(sum);
-};
+const getTotal = R.compose(R.sum, R.map(getItemTotal));
 
 const matchesById = (targetId) => (item) => item.id === targetId;
 
