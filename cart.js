@@ -6,22 +6,20 @@ const matchesById = R.propEq('id');
 
 const containsItem = (targetId) => R.any(matchesById(targetId));
 
-const addQuantityToExistingItem = (id, extraQuantity, items) => {
-  return R.map((item) => {
-    if (item.id === id) {
-      return R.evolve({
-        quantity: R.add(extraQuantity)
-      })(item);
-    }
-    return item;
-  })(items);
-};
+const addQuantityToExistingItem = (id, extraQuantity) => R.map((item) => {
+  if (item.id === id) {
+    return R.evolve({
+      quantity: R.add(extraQuantity)
+    })(item);
+  }
+  return item;
+});
 
 const addNewItem = R.append;
 
 const addItem = (newItem, items) => {
   if (containsItem(newItem.id)(items)) {
-    return addQuantityToExistingItem(newItem.id, newItem.quantity, items);
+    return addQuantityToExistingItem(newItem.id, newItem.quantity)(items);
   }
   return addNewItem(newItem)(items)
 };
