@@ -6,19 +6,17 @@ const matchesById = R.propEq('id');
 
 const containsItem = (targetId) => R.any(matchesById(targetId));
 
-const addQuantityToExistingItem = (id, extraQuantity) => R.map((item) => {
-  if (item.id === id) {
-    return R.evolve({
-      quantity: R.add(extraQuantity)
-    })(item);
-  }
-  return item;
-});
+const addQuantityToExistingItem = (id, extraQuantity) => R.ifElse(
+  matchesById(id),
+  R.evolve({
+    quantity: R.add(extraQuantity)
+  }),
+  R.identity());
 
 const addNewItem = R.append;
 
 const addItem = (newItem) => R.ifElse(containsItem(newItem.id),
-  addQuantityToExistingItem(newItem.id, newItem.quantity),
+  R.map(addQuantityToExistingItem(newItem.id, newItem.quantity)),
   addNewItem(newItem));
 
 class Cart {
